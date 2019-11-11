@@ -1,0 +1,38 @@
+security:
+    encoders:
+        App\Entity\User\User:
+            algorithm: bcrypt
+
+    providers:
+        database:
+            entity:
+                class: App\Entity\User\User
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        api:
+            provider: database
+            stateless: true #if you want, disable storing the user in the session
+            anonymous: ~
+            guard:
+                authenticators:
+                    - App\Security\PasswordAuthenticator
+                    - App\Security\ApiKeyAuthenticator
+                    - App\Security\FacebookAuthenticator
+                    - App\Security\GoogleAuthenticator
+                entry_point: App\Security\PasswordAuthenticator
+
+    access_control:
+         - { path: ^/statistics, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/partners, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/notifications, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/installations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/uninstallations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/password-recovery, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/connect/facebook, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/connect/google, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
