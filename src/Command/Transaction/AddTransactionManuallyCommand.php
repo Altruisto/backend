@@ -90,7 +90,7 @@ class AddTransactionManuallyCommand extends Command
         $transaction->setSaleCurrency($formData['sale_currency']);
         $transaction->setCustomerCountryCode($formData['customer_country_code']);
         $transaction->setTracker($formData['tracker']);
-        $transaction->setRef($formData['ref']);
+        $transaction->setReferredBy($formData['referredBy']);
         $transaction->setTransactionDate($formData['transaction_date']);
         $transaction->setCause($formData['cause']);
         $transaction->setUser($formData['user']);

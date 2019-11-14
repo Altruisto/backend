@@ -122,12 +122,12 @@ class DownloadAwinTransactionsCommand extends Command
                 /** @var array $causes */
                 $causes =  $this->causeManager->findAll();
                 $cause = $causes[0];
-                $ref = null;
+                $referredBy = null;
             } else {
-                list($userId, $causeId, $ref) = $sid;
+                list($ref, $causeId, $referredBy) = $sid;
 
                 /** @var User $user */
-                $user = $this->userManager->find($userId);
+                $user = $this->userManager->findOneBy(['ref' => $ref]);
 
                 /** @var Cause $cause */
                 $cause = $this->causeManager->find($causeId);
@@ -149,7 +149,7 @@ class DownloadAwinTransactionsCommand extends Command
             $transaction->setTransactionDate(new DateTime($awinTransaction['transactionDate']));
             $transaction->setUser($user);
             $transaction->setTracker($awinTransaction['clickRefs']['clickRef']);
-            $transaction->setRef($ref);
+            $transaction->setReferredBy($referredBy);
             $transaction->setCause($cause);
             $transaction->setResponseContent($awinTransaction);
 
