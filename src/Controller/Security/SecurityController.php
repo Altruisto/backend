@@ -169,7 +169,13 @@ class SecurityController extends AbstractController
         $log = $this->logManager->findOneBy(['installationId' => $form->get('installation_id')->getData()]);
         if (null !== $log) {
             $log->setUser($user);
-            $user->setRef($log->getRef());
+
+            if (null === $this->userManager->findOneBy(['ref' => $log->getRef()])) {
+                $user->setRef($log->getRef());
+            } else {
+                $user->setRef(substr(hash('sha256', uniqid()), 0, 5));
+            }
+
             $this->logManager->save($log);
         }
 
