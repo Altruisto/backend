@@ -1,13 +1,16 @@
 version: "3.7"
 services:
-  mysql:
-    image: mysql:8.0
-    command: "--default-authentication-plugin=mysql_native_password"
+  db:
+    image: postgres:10.1
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: altruisto
-
+      - POSTGRES_DB=altruisto
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=altruistoPassword
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/
   php:
     build:
       context: .
@@ -16,7 +19,7 @@ services:
     volumes:
       - .:/var/www/html
     links:
-      - mysql
+      - db
     env_file:
       - .env
     user: 1000:1000
@@ -31,17 +34,17 @@ services:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - .:/var/www/html
     ports:
-      - 80:80
+      - 8000:80
     restart: always
     depends_on:
       - php
-      - mysql
+      - db
   adminer:
     image: adminer
     restart: always
     links:
-      - mysql
+      - db
     depends_on:
-      - mysql
+      - db
     ports:
       - 8080:8080
