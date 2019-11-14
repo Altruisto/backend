@@ -84,7 +84,7 @@ class TransactionType extends AbstractType
                 'constraints' => [
                 ],
             ])
-            ->add('ref', TextType::class, [
+            ->add('referredBy', TextType::class, [
                 'constraints' => [
                 ],
             ])

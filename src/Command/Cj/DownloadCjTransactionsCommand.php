@@ -21,7 +21,6 @@ use App\Manager\Transaction\TransactionManager;
 use App\Manager\User\UserManager;
 use App\Utils\Cj\CjClient;
 use DateTime;
-use Doctrine\Common\Collections\Collection;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -122,12 +121,12 @@ class DownloadCjTransactionsCommand extends Command
                 /** @var array $causes */
                 $causes =  $this->causeManager->findAll();
                 $cause = $causes[0];
-                $ref = null;
+                $referredBy = null;
             } else {
-                list($userId, $causeId, $ref) = $sid;
+                list($ref, $causeId, $referredBy) = $sid;
 
                 /** @var User $user */
-                $user = $this->userManager->find($userId);
+                $user = $this->userManager->findOneBy(['ref' => $ref]);
 
                 /** @var Cause $cause */
                 $cause = $this->causeManager->find($causeId);
@@ -145,7 +144,7 @@ class DownloadCjTransactionsCommand extends Command
             $transaction->setCommissionCurrency('EUR');
             $transaction->setSaleAmount($cjTransaction['saleAmountPubCurrency']*100);
             $transaction->setTracker($cjTransaction['shopperId']);
-            $transaction->setRef($ref);
+            $transaction->setReferredBy($referredBy);
             $transaction->setSaleCurrency('EUR');
             $transaction->setCustomerCountryCode($cjTransaction['country']);
             $transaction->setTransactionDate(new DateTime($cjTransaction['eventDate']));

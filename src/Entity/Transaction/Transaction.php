@@ -18,6 +18,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Exception;
 
 /**
  * Class Transaction
@@ -115,7 +116,7 @@ class Transaction
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $ref;
+    private $referredBy;
 
     /**
      * @var array
@@ -171,6 +172,8 @@ class Transaction
 
     /**
      * Notification constructor.
+     *
+     * @throws Exception
      */
     public function __construct()
     {
@@ -413,22 +416,6 @@ class Transaction
     /**
      * @return string|null
      */
-    public function getRef(): ?string
-    {
-        return $this->ref;
-    }
-
-    /**
-     * @param string|null $ref
-     */
-    public function setRef(?string $ref): void
-    {
-        $this->ref = $ref;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getCustomerCountryCode(): ?string
     {
         return $this->customerCountryCode;
@@ -440,5 +427,21 @@ class Transaction
     public function setCustomerCountryCode(?string $customerCountryCode): void
     {
         $this->customerCountryCode = $customerCountryCode;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReferredBy(): ?string
+    {
+        return $this->referredBy;
+    }
+
+    /**
+     * @param string|null $referredBy
+     */
+    public function setReferredBy(?string $referredBy): void
+    {
+        $this->referredBy = $referredBy;
     }
 }
