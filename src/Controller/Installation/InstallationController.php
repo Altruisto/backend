@@ -12,9 +12,11 @@
 namespace App\Controller\Installation;
 
 use App\Entity\Installation\Log;
+use App\Entity\User\User;
 use App\Form\Installation\InstallationType;
 use App\Manager\Installation\LogManager;
 use App\Repository\Installation\LogRepository;
+use App\Repository\User\UserRepository;
 use App\Utils\FormHelper;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -88,21 +90,22 @@ class InstallationController extends AbstractController
     /**
      * @Route("/installations/{installationId}", methods={"GET"}, name="installation_informations_installation")
      *
-     * @param Log           $installation
-     * @param LogRepository $logRepository
+     * @param Log            $installation
+     * @param LogRepository  $logRepository
+     * @param UserRepository $userRepository
      *
      * @return JsonResponse
      */
-    public function info(Log $installation, LogRepository $logRepository): JsonResponse
+    public function info(Log $installation, LogRepository $logRepository, UserRepository $userRepository): JsonResponse
     {
         $installation->getRef();
 
-        $installationsCount = count($logRepository->findBy(['referredBy' => $installation->getRef()]));
+        $users = $userRepository->findBy(['referredBy' => $installation->getRef()]);
 
         return new JsonResponse([
             'installation_id' => $installation->getInstallationId(),
             'ref' => $installation->getRef(),
-            'referrals_count' => $installationsCount,
+            'referrals_count' => count($users),
         ], Response::HTTP_OK);
     }
 }
