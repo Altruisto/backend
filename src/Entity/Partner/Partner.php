@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping\OneToMany;
 /**
  * Class Partner
  *
- * @ORM\Table(name="partners")
+ * @ORM\Table(name="partners", uniqueConstraints={@ORM\UniqueConstraint(name="partners_domain", columns={"domain"})})
  * @ORM\Entity(repositoryClass="App\Repository\Partner\PartnerRepository")
  * @ORM\HasLifecycleCallbacks
  */
@@ -77,7 +77,7 @@ class Partner
      *
      * @var int
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $cookieExpirationTime;
 
