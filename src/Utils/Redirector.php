@@ -45,27 +45,27 @@ class Redirector
      */
     function monetize_link($url, $data, $tracker = 'chex') {
         switch($data['network']){
-            case '1' :
+            case 'cj' :
                 //cj.com
                 $redirect = 'http://www.anrdoezrs.net/links/8106588/type/dlg/sid/' . $tracker . '/' . $url;
                 break;
 
-            case '2' :
+            case 'awin' :
                 //awin.com
                 $redirect = 'http://www.awin1.com/cread.php?awinmid=' . $data['network_id'] . '&awinaffid=283879&clickref=' . $tracker . '&p=' . urlencode($url);
                 break;
 
-            case '3' :
+            case 'linkshare' :
                 //linkshare
                 $redirect = 'https://click.linksynergy.com/deeplink?id=XK9XruzkyUo&u1=' . $tracker . '&mid=' . $data['network_id'] . '&murl=' . urlencode($url);
                 break;
 
-            case '4' :
+            case 'ebay' :
                 //ebay
                 $redirect = 'http://rover.ebay.com/rover/1/' . $data['network_id'] . '/1?ff3=4&pub=5575312620&toolid=10001&campid=5338164459&customid=' . $tracker . '&mpre=' . urlencode($url);
                 break;
 
-            case '5' :
+            case 'tradetracker' :
                 //tradetracker.com
                 $parts = parse_url($url);
                 if(strpos($data['network_id'], 'tc.tradetracker.net') !== false){
@@ -76,7 +76,7 @@ class Redirector
                 }
                 break;
 
-            case '6' :
+            case 'booking' :
                 //booking.com
                 if(substr($url, -5) == '.html' OR substr($url, -4) == '.com') { //if last 5 characters are ".html" or ".com"
                     $redirect = $url . '?aid=' . $data['network_id'] . '&label=' . $tracker;
@@ -85,7 +85,7 @@ class Redirector
                 }
                 break;
 
-            case '7' :
+            case 'commission_factory' :
                 //commissionfactory.com
                 $redirect = 'https://t.cfjump.com/50770/t/' . $data['network_id'] . '?Url=' . urlencode($url) . '&UniqueId=' . $tracker;
                 break;

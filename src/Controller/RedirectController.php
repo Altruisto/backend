@@ -11,6 +11,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Partner\Partner;
+use App\Repository\Partner\PartnerRepository;
 use App\Utils\Redirector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,21 +27,18 @@ class RedirectController extends AbstractController
     /**
      * @Route("/redirect", methods={"GET"}, name="redirect_get")
      *
-     * @param Request    $request
-     * @param string     $url
-     * @param string     $tracker
-     * @param Redirector $redirector
+     * @param Request                $request
+     * @param Redirector             $redirector
+     * @param PartnerRepository      $partnerRepository
      *
      * @return JsonResponse
-     *
      */
-    public function showAll(Request $request, string $url, string $tracker, Redirector $redirector)
+    public function showAll(Request $request, Redirector $redirector, PartnerRepository $partnerRepository)
     {
-        $url = $_GET['url'];
+        $url = $request->get('url');
+        $tracker = $request->get('tracker');
 
-        if($redirector->validate_url($url)){
-            //add http:// if no scheme
-
+        if($redirector->validate_url($url)) {
             if($parts = parse_url($url)){
                 if(!isset($parts["scheme"])){
                     $url = "http://$url";
@@ -48,16 +47,16 @@ class RedirectController extends AbstractController
 
             $domain = $redirector->get_domain($url);
 
-            $sth = $db->prepare("SELECT `network`, `network_id` FROM `partners` WHERE domain = '" . $domain . "'");
-            $sth->execute();
-
-            $result = $sth->fetch(PDO::FETCH_ASSOC);
+            /** @var Partner $partner */
+            $partner = $partnerRepository->findOneBy(['domain' => $domain]);
 
             if(!empty($result)){
-                header("location: " . monetize_link($url, $result));
+                header("location: " . 'https://altruisto.com/partners/not-found');
             }
         }
 
-        return new JsonResponse($notifications, JsonResponse::HTTP_OK);
+        $monetizedLink = $redirector->monetize_link($url, ['network' => $partner->getAffiliationNetworkName(), 'network_id' => $partner->getExternalAffiliationId()]);
+
+        return new JsonResponse($monetizedLink, JsonResponse::HTTP_OK);
     }
 }
