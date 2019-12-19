@@ -43,7 +43,7 @@ class Redirector
      *
      * @return string
      */
-    function monetize_link($url, $data, $tracker = 'chex') {
+    function monetize_link($url, $data, $tracker = '---') {
         switch($data['network']){
             case 'cj' :
                 //cj.com
