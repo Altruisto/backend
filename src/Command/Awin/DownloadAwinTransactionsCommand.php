@@ -124,13 +124,17 @@ class DownloadAwinTransactionsCommand extends Command
                 $cause = $causes[0];
                 $referredBy = null;
             } else {
-                list($ref, $causeId, $referredBy) = $sid;
+                list($ref, $cause, $referredBy) = $sid;
 
                 /** @var User $user */
                 $user = $this->userManager->findOneBy(['ref' => $ref]);
 
                 /** @var Cause $cause */
-                $cause = $this->causeManager->find($causeId);
+                $cause = $this->causeManager->findOneBy(['cause' => $cause]);
+
+                if (null !== $cause) {
+                    $cause = $this->causeManager->findOneBy(['cause' => 'extreme_poverty']);
+                }
             }
 
             $transaction = $this->transactionManager->create();
