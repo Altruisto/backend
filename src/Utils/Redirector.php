@@ -85,7 +85,7 @@ class Redirector
                 }
                 break;
 
-            case 'commission_factory' :
+            case 'commissionfactory' :
                 //commissionfactory.com
                 $redirect = 'https://t.cfjump.com/50770/t/' . $data['network_id'] . '?Url=' . urlencode($url) . '&UniqueId=' . $tracker;
                 break;
