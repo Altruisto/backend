@@ -17,6 +17,7 @@ use App\Utils\Redirector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -38,7 +39,7 @@ class RedirectController extends AbstractController
         $url = $request->get('url');
         $tracker = $request->get('tracker');
 
-        if($redirector->validate_url($url)) {
+        if ($redirector->validate_url($url)) {
             if($parts = parse_url($url)){
                 if(!isset($parts["scheme"])){
                     $url = "http://$url";
@@ -50,13 +51,24 @@ class RedirectController extends AbstractController
             /** @var Partner $partner */
             $partner = $partnerRepository->findOneBy(['domain' => $domain]);
 
-            if(!empty($result)){
-                header("location: " . 'https://altruisto.com/partners/not-found');
+            if(empty($partner)){
+                $response = new JsonResponse(null, Response::HTTP_PERMANENTLY_REDIRECT);;
+                $response->headers->set('Location', 'https://altruisto.com/partners/not-found');
+
+                return $response;
             }
+
+            $response = new JsonResponse(null, Response::HTTP_PERMANENTLY_REDIRECT);
+            $response->headers->set('Location', $redirector->monetize_link($url, ['network' => $partner->getAffiliationNetworkName(), 'network_id' => $partner->getExternalAffiliationId()], $tracker));
+
+            return $response;
+
         }
 
-        $monetizedLink = $redirector->monetize_link($url, ['network' => $partner->getAffiliationNetworkName(), 'network_id' => $partner->getExternalAffiliationId()], $tracker);
+        $response = new JsonResponse(null, Response::HTTP_PERMANENTLY_REDIRECT);
+        $response->headers->set('Location', 'https://altruisto.com/partners/not-found');
 
-        return new JsonResponse($monetizedLink, JsonResponse::HTTP_OK);
+        return $response;
+
     }
 }
