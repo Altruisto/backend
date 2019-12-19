@@ -69,10 +69,10 @@ class Redirector
                 //tradetracker.com
                 $parts = parse_url($url);
                 if(strpos($data['network_id'], 'tc.tradetracker.net') !== false){
-                    $redirect = $data['network_id'] . '&r=' . $tracker . '&u=' . urlencode($parts['path']);
+                    $redirect = $data['network_id'] . '&r=' . $tracker . '&u=' . urlencode($parts['path'] ?? '');
                 }
                 else{
-                    $redirect = $data['network_id'] . $tracker . '&r=' . urlencode($parts['path']);
+                    $redirect = $data['network_id'] . $tracker . '&r=' . urlencode($parts['path'] ?? '');
                 }
                 break;
 
