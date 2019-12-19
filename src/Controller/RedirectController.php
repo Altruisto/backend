@@ -55,7 +55,7 @@ class RedirectController extends AbstractController
             }
         }
 
-        $monetizedLink = $redirector->monetize_link($url, ['network' => $partner->getAffiliationNetworkName(), 'network_id' => $partner->getExternalAffiliationId()]);
+        $monetizedLink = $redirector->monetize_link($url, ['network' => $partner->getAffiliationNetworkName(), 'network_id' => $partner->getExternalAffiliationId()], $tracker);
 
         return new JsonResponse($monetizedLink, JsonResponse::HTTP_OK);
     }
