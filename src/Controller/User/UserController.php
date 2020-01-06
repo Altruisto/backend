@@ -16,6 +16,8 @@ use App\Entity\User\User;
 use App\Form\ChangePasswordType;
 use App\Form\SettingsType;
 use App\Manager\User\UserManager;
+use App\Repository\Installation\LogRepository;
+use App\Repository\User\UserRepository;
 use App\Utils\FormHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -130,9 +132,12 @@ class UserController extends AbstractController
     /**
      * @Route("/user", methods={"GET"}, name="user_details")
      *
+     * @param LogRepository  $logRepository
+     * @param UserRepository $userRepository
+     *
      * @return JsonResponse
      */
-    public function account()
+    public function account(LogRepository $logRepository, UserRepository $userRepository)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -143,6 +148,9 @@ class UserController extends AbstractController
         foreach ($user->getTransactions() as $transaction) {
             $moneyRaised  += $transaction->getCommissionAmount();
         }
+
+        $installationsCount = count($logRepository->findBy(['referredBy' => $user->getRef(), 'user' => null]));
+        $usersCount = count($userRepository->findBy(['referredBy' => $user->getRef()]));
 
         return new JsonResponse([
             'id' => $user->getId(),
@@ -155,6 +163,7 @@ class UserController extends AbstractController
             'created_at' => $user->getCreatedAt()->format('c'),
             'updated_at' => $user->getUpdatedAt()->format('c'),
             'registration_source' => $user->getRegistrationSource(),
+            'referrals_count' => $installationsCount + $usersCount,
         ], JsonResponse::HTTP_OK);
     }
 }
