@@ -27,6 +27,7 @@ security:
     access_control:
          - { path: ^/statistics, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/partners, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/redirect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/notifications, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/installations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/uninstallations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
