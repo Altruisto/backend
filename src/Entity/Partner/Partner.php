@@ -75,7 +75,7 @@ class Partner
     /**
      * In seconds
      *
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -251,15 +251,15 @@ class Partner
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getCookieExpirationTime(): int
+    public function getCookieExpirationTime(): ?int
     {
         return $this->cookieExpirationTime;
     }
 
     /**
-     * @param int $cookieExpirationTime
+     * @param null|int $cookieExpirationTime
      */
     public function setCookieExpirationTime(int $cookieExpirationTime): void
     {
