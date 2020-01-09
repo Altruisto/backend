@@ -37,7 +37,7 @@ class User implements UserInterface, Serializable
 
     const CAUSE_AREA_EXTREME_POVERTY = 'extreme_poverty';
 
-    const CAUSE_AREA_ANIMAL_SUFFERING = 'animal_suffering';
+    const CAUSE_AREA_ANIMAL_SUFFERING = 'animals';
 
     /**
      * @var int
@@ -243,8 +243,7 @@ class User implements UserInterface, Serializable
      *
      */
     public function eraseCredentials()
-    {
-    }
+    { }
 
     /**
      * @see Serializable::serialize()
@@ -265,11 +264,11 @@ class User implements UserInterface, Serializable
      */
     public function unserialize($serialized)
     {
-        list (
+        list(
             $this->id,
             $this->email,
             $this->password,
-            ) = unserialize($serialized, array('allowed_classes' => false));
+        ) = unserialize($serialized, array('allowed_classes' => false));
     }
 
     /**

@@ -44,7 +44,7 @@ class UserType extends AbstractType
                     new Email(),
                     new Length([
                         'min' => 5,
-                        'max' => 20,
+                        'max' => 100,
                     ]),
                 ],
             ])
