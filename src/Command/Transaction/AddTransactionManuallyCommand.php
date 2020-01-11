@@ -12,6 +12,8 @@
 namespace App\Command\Transaction;
 
 use App\Entity\Transaction\Transaction;
+use App\Entity\User\User;
+use App\Event\Security\ResetPasswordRequestEvent;
 use App\Form\Command\Transaction\TransactionType;
 use App\Manager\Cause\CauseManager;
 use App\Manager\Transaction\TransactionManager;
@@ -21,6 +23,7 @@ use Matthias\SymfonyConsoleForm\Console\Helper\FormHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class AddTransactionManuallyCommand
@@ -31,29 +34,37 @@ class AddTransactionManuallyCommand extends Command
      * @var TransactionManager
      */
     private $transactionManager;
+
     /**
      * @var CauseManager
      */
     private $causeManager;
+
     /**
      * @var UserManager
      */
     private $userManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * AddTransactionManuallyCommand constructor.
      *
-     * @param TransactionManager $transactionManager
-     * @param CauseManager       $causeManager
-     * @param UserManager        $userManager
-     * @param string|null        $name
+     * @param TransactionManager       $transactionManager
+     * @param CauseManager             $causeManager
+     * @param UserManager              $userManager
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(TransactionManager $transactionManager, CauseManager $causeManager, UserManager $userManager, ?string $name = null)
+    public function __construct(TransactionManager $transactionManager, CauseManager $causeManager, UserManager $userManager, EventDispatcherInterface $eventDispatcher)
     {
-        parent::__construct($name);
+        parent::__construct();
         $this->transactionManager = $transactionManager;
         $this->causeManager = $causeManager;
         $this->userManager = $userManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -76,6 +87,13 @@ class AddTransactionManuallyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        var_dump(getenv('MAILER_USERNAME'));
+        die;
+
+        $user = new User();
+        $this->eventDispatcher->dispatch(ResetPasswordRequestEvent::NAME, new ResetPasswordRequestEvent($user));
+
+        die;
         /** @var FormHelper $formHelper */
         $formHelper = $this->getHelper('form');
         $formData = $formHelper->interactUsingForm(new TransactionType(), $input, $output);
