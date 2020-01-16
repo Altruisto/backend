@@ -80,11 +80,9 @@ class ResetPasswordRequestSubscriber implements EventSubscriberInterface
 ////        $this->entityManager->flush();
         ///
 
-        var_dump(getenv('MAILER_USERNAME'));
-        die;
 
         $message = (new TemplatedEmail())
-            ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
+            ->from(new Address('daniel@altruisto.com', 'Daniel from Altruisto'))
             ->to($user->getEmail())
             ->subject('LALAL')
             ->htmlTemplate('emails/security/reset_password.html.twig')

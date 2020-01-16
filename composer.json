@@ -21,6 +21,7 @@
         "symfony/flex": "^1.1",
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
+        "symfony/google-mailer": "*",
         "symfony/mailer": "^4.1",
         "symfony/monolog-bundle": "^3.3",
         "symfony/orm-pack": "^1.0",

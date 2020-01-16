@@ -278,19 +278,11 @@ class User implements UserInterface, Serializable
      */
     public function unserialize($serialized)
     {
-<<<<<<< HEAD
-        list(
-            $this->id,
-            $this->email,
-            $this->password,
-        ) = unserialize($serialized, array('allowed_classes' => false));
-=======
         [
             $this->id,
             $this->email,
             $this->password,
             ] = unserialize($serialized, array('allowed_classes' => false));
->>>>>>> mailing
     }
 
     /**

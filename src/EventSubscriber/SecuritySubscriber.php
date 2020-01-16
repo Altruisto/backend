@@ -110,43 +110,10 @@ class SecuritySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return array(
-            ResetPasswordRequestEvent::NAME => [
-                'sendEmail'
-            ],
             UserRegisteredEvent::NAME => [
                 'checkReferredByThreshold'
             ],
         );
-    }
-
-    /**
-     * @param ResetPasswordRequestEvent $event
-     *
-     * @throws Exception
-     */
-    public function sendEmail(ResetPasswordRequestEvent $event)
-    {
-        $user = $event->getUser();
-
-        $token = new ResetPasswordToken();
-        $token->setExpireAt(new \DateTime('now + 1 DAYS'));
-        $token->setUser($user);
-        $token->setToken(hash('sha256', uniqid($user->getPassword())));
-        $this->entityManager->persist($token);
-        $this->entityManager->flush();
-
-        $message = (new \Swift_Message('Reset hasła'))
-            ->setFrom(getenv('MAILER_USERNAME'), getenv('MAILER_FROM'))
-            ->setTo($user->getEmail())
-            ->setBcc(getenv('MAILER_USERNAME'))
-            ->setBody($this->twig->render('emails/security/reset_password.html.twig',
-                [
-                    'token' => $token->getToken(),
-                ]),
-                'text/html'
-            );
-
-        $this->mailer->send($message);
     }
 
     /**
