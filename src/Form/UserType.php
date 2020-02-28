@@ -57,12 +57,12 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('currency', CurrencyType::class, [
-                'constraints' => [
-                    new NotBlank(),
-                    new Currency(),
-                ],
-            ])
+//            ->add('currency', CurrencyType::class, [
+//                'constraints' => [
+//                    new NotBlank(),
+//                    new Currency(),
+//                ],
+//            ])
             ->add('accept_terms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [

@@ -185,6 +185,8 @@ class User implements UserInterface, Serializable
         $this->causeArea = User::CAUSE_AREA_EXTREME_POVERTY;
         $this->currency = self::DEFAULT_CURRENCY;
         $this->updatedAt = new DateTime();
+        $this->emailVerified = false;
+        $this->emailVerificationToken =  hash('sha256', uniqid());
     }
 
     /**
