@@ -24,7 +24,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Swift_Mailer;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\NamedAddress;
 use Twig_Environment;
 
 /**
@@ -89,12 +93,11 @@ class SecuritySubscriber implements EventSubscriberInterface
      *
      * @param UserManager            $userManager
      * @param NotificationManager    $notificationManager
-     * @param Swift_Mailer           $mailer
      * @param Twig_Environment       $twig
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface        $logger
      */
-    public function __construct(UserManager $userManager, NotificationManager $notificationManager, Swift_Mailer $mailer, Twig_Environment $twig, EntityManagerInterface $entityManager, LoggerInterface $logger)
+    public function __construct(UserManager $userManager, NotificationManager $notificationManager, MailerInterface $mailer, Twig_Environment $twig, EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->userManager = $userManager;
         $this->notificationManager = $notificationManager;
@@ -111,9 +114,24 @@ class SecuritySubscriber implements EventSubscriberInterface
     {
         return array(
             UserRegisteredEvent::NAME => [
-                'checkReferredByThreshold'
+                'checkReferredByThreshold',
+                'sendEmail'
             ],
         );
+    }
+
+    public function sendEmail(UserRegisteredEvent $event)
+    {
+        $message = (new TemplatedEmail())
+            ->from(getenv('MAILER_FROM'))
+            ->to(getenv('MAILER_FROM'))
+            ->bcc(getenv('MAILER_USERNAME'))
+            ->subject('asdasd')
+            ->htmlTemplate('emails/order/reset_password.html.twig')
+            ->context([
+            ]);
+
+        $this->mailer->send($message);
     }
 
     /**
