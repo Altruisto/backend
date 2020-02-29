@@ -12,29 +12,21 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Notification\Notification;
-use App\Entity\Security\ResetPasswordToken;
 use App\Entity\User\User;
-use App\Event\Security\ResetPasswordRequestEvent;
 use App\Event\Security\UserRegisteredEvent;
-use App\Event\Transaction\TransactionSaveEvent;
-use App\Manager\Notification\NotificationManager;
-use App\Manager\User\UserManager;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\User\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Psr\Log\LoggerInterface;
-use Swift_Mailer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\NamedAddress;
-use Twig_Environment;
+use Symfony\Component\Mime\Address;
 
 /**
- * Class SecuritySubscriber
+ * Class UserRegisteredSubscriber
  */
-class SecuritySubscriber implements EventSubscriberInterface
+class UserRegisteredSubscriber implements EventSubscriberInterface
 {
     const THRESHOLDS = [
         100,
@@ -59,24 +51,9 @@ class SecuritySubscriber implements EventSubscriberInterface
     ];
 
     /**
-     * @var UserManager
-     */
-    private $userManager;
-
-    /**
-     * @var NotificationManager
-     */
-    private $notificationManager;
-
-    /**
-     * @var Swift_Mailer
+     * @var MailerInterface
      */
     private $mailer;
-
-    /**
-     * @var Twig_Environment
-     */
-    private $twig;
 
     /**
      * @var EntityManagerInterface
@@ -89,22 +66,24 @@ class SecuritySubscriber implements EventSubscriberInterface
     private $logger;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * SecuritySubscriber constructor.
      *
-     * @param UserManager            $userManager
-     * @param NotificationManager    $notificationManager
-     * @param Twig_Environment       $twig
+     * @param MailerInterface        $mailer
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface        $logger
+     * @param UserRepository         $userRepository
      */
-    public function __construct(UserManager $userManager, NotificationManager $notificationManager, MailerInterface $mailer, Twig_Environment $twig, EntityManagerInterface $entityManager, LoggerInterface $logger)
+    public function __construct(MailerInterface $mailer, EntityManagerInterface $entityManager, LoggerInterface $logger, UserRepository $userRepository)
     {
-        $this->userManager = $userManager;
-        $this->notificationManager = $notificationManager;
         $this->mailer = $mailer;
-        $this->twig = $twig;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -112,22 +91,25 @@ class SecuritySubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents(): array
     {
-        return array(
+        return [
             UserRegisteredEvent::NAME => [
-                'checkReferredByThreshold',
-                'sendEmail'
+                'sendWelcomeEmail',
             ],
-        );
+        ];
     }
 
-    public function sendEmail(UserRegisteredEvent $event)
+    /**
+     * @param UserRegisteredEvent $event
+     *
+     * @throws TransportExceptionInterface
+     */
+    public function sendWelcomeEmail(UserRegisteredEvent $event)
     {
         $message = (new TemplatedEmail())
-            ->from(getenv('MAILER_FROM'))
-            ->to(getenv('MAILER_FROM'))
-            ->bcc(getenv('MAILER_USERNAME'))
-            ->subject('asdasd')
-            ->htmlTemplate('emails/order/reset_password.html.twig')
+            ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
+            ->to(new Address($event->getUser()->getEmail()))
+            ->subject('thxForRegistration//todo')
+            ->htmlTemplate('emails/thanks_for_registration.html.twig')
             ->context([
             ]);
 
@@ -137,7 +119,7 @@ class SecuritySubscriber implements EventSubscriberInterface
     /**
      * @param UserRegisteredEvent $event
      *
-     * @throws Exception
+     * @throws TransportExceptionInterface
      */
     public function checkReferredByThreshold(UserRegisteredEvent $event)
     {
@@ -146,23 +128,37 @@ class SecuritySubscriber implements EventSubscriberInterface
         }
 
         /** @var User $referrerUser */
-        $referrerUser = $this->userManager->findOneBy(['ref' => $event->getUser()->getReferredBy()]);
+        $referrerUser = $this->userRepository->findOneBy(['ref' => $event->getUser()->getReferredBy()]);
 
         if (null === $referrerUser) {
             return;
         }
 
-        $referralUsers = $this->userManager->findBy(['referredBy' => $event->getUser()->getReferredBy()]);
+        $referralUsers = $this->userRepository->findBy(['referredBy' => $event->getUser()->getReferredBy()]);
 
         $threshold = $this->getHighestThreshold(count($referralUsers));
 
-        if (null !== $threshold) {
-            $notification = $this->notificationManager->create();
-            $notification->setUser($referrerUser);
-            $notification->setType(Notification::TYPE_PRIVATE);
-            $notification->setContent('threshold: '. $threshold);
-            $this->notificationManager->save($notification);
+        if (null === $threshold) {
+            return;
         }
+
+        $notification = new Notification();
+        $notification->setUser($referrerUser);
+        $notification->setType(Notification::TYPE_PRIVATE);
+        $notification->setContent('threshold: '. $threshold);
+
+        $this->entityManager->persist($notification);
+
+
+        $message = (new TemplatedEmail())
+            ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
+            ->to(new Address($event->getUser()->getEmail()))
+            ->subject('thxForRegistration//todo')
+            ->htmlTemplate('emails/ref_more_than_x.html.twig')
+            ->context([
+            ]);
+
+        $this->mailer->send($message);
     }
 
     /**

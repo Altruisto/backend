@@ -14,13 +14,11 @@ namespace App\EventSubscriber;
 use App\Entity\User\User;
 use App\Event\Security\ResetPasswordRequestEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\NamedAddress;
 
 /**
  * Class ResetPasswordRequestSubscriber
@@ -70,24 +68,17 @@ class ResetPasswordRequestSubscriber implements EventSubscriberInterface
     {
         /** @var User $user */
         $user = $event->getUser();
-        $user->setEmail('jakub.szczesniak@protonmail.com');
-        $user->setUsername('jakub.szczesniak@protonmail.com');
 
         $user->setEmailVerificationToken(hash('sha256', uniqid()));
-////        $user->setEmailVerified(false);
-////
-////        $this->entityManager->persist($user);
-////        $this->entityManager->flush();
-        ///
-
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         $message = (new TemplatedEmail())
-            ->from(new Address('daniel@altruisto.com', 'Daniel from Altruisto'))
-            ->to($user->getEmail())
-            ->subject('LALAL')
-            ->htmlTemplate('emails/security/reset_password.html.twig')
+            ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
+            ->to(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
+            ->subject('thxForRegistration//todo')
+            ->htmlTemplate('emails/reset_password.html.twig')
             ->context([
-                'token' => $user->getEmailVerificationToken(),
             ]);
 
         $this->mailer->send($message);

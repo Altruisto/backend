@@ -1,0 +1,24 @@
+{% apply inky_to_html|inline_css(source('@styles/foundation-emails.css')) %}
+    {% include 'emails/_email_header.html.twig' %}
+    <container>
+        <spacer size="16"></spacer>
+        <row>
+            <columns>
+                <row>
+                    <h3>Witaj,</h3>
+                </row>
+                <row>
+                    <p>aby zresetować hasło kliknij w poniższy link:</p>
+                </row>
+                <row>
+                    <center>
+                        <button href="" class="radius">Zmień hasło</button>
+                    </center>
+                </row>
+                <spacer size="50"></spacer>
+                {% include 'emails/_email_legal.html.twig' %}
+            </columns>
+        </row>
+    </container>
+{% endapply %}
+
