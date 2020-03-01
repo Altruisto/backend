@@ -93,7 +93,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
     {
         return [
             UserRegisteredEvent::NAME => [
-                'sendWelcomeEmail',
+                'sendConfirmationEmail',
             ],
         ];
     }
@@ -103,14 +103,16 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
      *
      * @throws TransportExceptionInterface
      */
-    public function sendWelcomeEmail(UserRegisteredEvent $event)
+    public function sendConfirmationEmail(UserRegisteredEvent $event)
     {
+        $user = $event->getUser();
         $message = (new TemplatedEmail())
             ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
-            ->to(new Address($event->getUser()->getEmail()))
+            ->to(new Address($user->getEmail()))
             ->subject('Confirm your email')
-            ->htmlTemplate('emails/thanks_for_registration.html.twig')
+            ->htmlTemplate('emails/confirm_email.html.twig')
             ->context([
+                'email_verification_token' => $user->getEmailVerificationToken()
             ]);
 
         $this->mailer->send($message);
