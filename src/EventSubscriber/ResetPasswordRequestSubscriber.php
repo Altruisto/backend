@@ -74,7 +74,7 @@ class ResetPasswordRequestSubscriber implements EventSubscriberInterface
         $this->entityManager->flush();
 
         $message = (new TemplatedEmail())
-            ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
+        ->from(new Address(getenv('MAILER_FROM_ADDRESS'), getenv('MAILER_FROM_USERNAME')))
             ->to(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
             ->subject('Reset your password')
             ->htmlTemplate('emails/reset_password.html.twig')
