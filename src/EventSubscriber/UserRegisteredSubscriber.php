@@ -108,7 +108,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
         $message = (new TemplatedEmail())
             ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
             ->to(new Address($event->getUser()->getEmail()))
-            ->subject('thxForRegistration//todo')
+            ->subject('Confirm your email')
             ->htmlTemplate('emails/thanks_for_registration.html.twig')
             ->context([
             ]);
@@ -153,7 +153,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
         $message = (new TemplatedEmail())
             ->from(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
             ->to(new Address($event->getUser()->getEmail()))
-            ->subject('thxForRegistration//todo')
+            ->subject('Your are awesome!')
             ->htmlTemplate('emails/ref_more_than_x.html.twig')
             ->context([
             ]);
