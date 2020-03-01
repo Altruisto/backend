@@ -18,6 +18,7 @@ use App\Event\Security\ResetPasswordRequestEvent;
 use App\Event\Security\UserRegisteredEvent;
 use App\Form\Security\ResetPasswordRequestType;
 use App\Form\Security\ResetPasswordType;
+use App\Form\Security\VerifyEmailType;
 use App\Form\UserType;
 use App\Manager\Installation\LogManager;
 use App\Manager\User\UserManager;
@@ -253,5 +254,36 @@ class SecurityController extends AbstractController
         }
 
         return new JsonResponse(null, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/email-verification", methods={"POST"}, name="email_verification")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     * @throws \Exception
+     */
+    public function emailVerification(Request $request): Response
+    {
+        $form = $this->createForm(VerifyEmailType::class);
+        $form->submit(json_decode($request->getContent(), true));
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            /** @var User $user */
+            $user = $this->userManager->findOneBy(['emailVerificationToken' => $data['email_verification_token']]);
+
+            if (null === $user) {
+                return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+            }
+
+            $user->setEmailVerified(true);
+            $this->userManager->save($user);
+            return new JsonResponse(null, Response::HTTP_OK);
+        }
+
+        return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
     }
 }
