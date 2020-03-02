@@ -1,1 +1,20 @@
-threshold {{ threshold }}<br>
+{% apply inky_to_html|inline_css(source('@styles/foundation-emails.css')) %}
+{% apply inky_to_html|inline_css(source('styles.css')) %}
+    {% include 'emails/_email_header.html.twig' %}
+    <container>
+        <spacer size="16"></spacer>
+        <row>
+            <columns>
+                <row>
+                    <h3>You have just reached a new milestone!</h3>
+                </row>
+                <row>
+                    <p>You have referred altruisto to {{ treshold }} users! Thank you!</p>
+                </row>
+                <spacer size="25"></spacer>
+                {% include 'emails/_email_legal.html.twig' %}
+            </columns>
+        </row>
+    </container>
+{% endapply %}
+{% endapply %}

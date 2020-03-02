@@ -137,8 +137,9 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
         }
 
         $referralUsers = $this->userRepository->findBy(['referredBy' => $event->getUser()->getReferredBy()]);
+        $referredNumber = count($referralUsers);
 
-        $threshold = $this->getHighestThreshold(count($referralUsers));
+        $threshold = $this->getHighestThreshold(count($referredNumber));
 
         if (null === $threshold) {
             return;
@@ -158,6 +159,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
             ->subject('Your are awesome!')
             ->htmlTemplate('emails/ref_more_than_x.html.twig')
             ->context([
+                'treshold' => $referredNumber
             ]);
 
         $this->mailer->send($message);
