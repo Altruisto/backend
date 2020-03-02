@@ -1,0 +1,26 @@
+{% apply inky_to_html|inline_css(source('@styles/foundation-emails.css')) %}
+{% apply inky_to_html|inline_css(source('styles.css')) %}
+    {% include 'emails/_email_header.html.twig' %}
+    <container>
+        <spacer size="16"></spacer>
+        <row>
+            <columns>
+                <row>
+                    <h3>Welcome to Altruisto!</h3>
+                </row>
+                <row>
+                    <p>Please confirm your email by clicking the following link:</p>
+                </row>
+                <spacer size="25"></spacer>
+                <row>
+                    <center>
+                        <a href="https://altruisto.com/confirm-email/{{ email_verification_token }}" class="email-button">Confirm email</a>
+                    </center>
+                </row>
+                <spacer size="25"></spacer>
+                {% include 'emails/_email_legal.html.twig' %}
+            </columns>
+        </row>
+    </container>
+{% endapply %}
+{% endapply %}

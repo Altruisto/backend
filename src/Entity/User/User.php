@@ -133,6 +133,20 @@ class User implements UserInterface, Serializable
     private $createdAt;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $emailVerified;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $emailVerificationToken;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -171,6 +185,8 @@ class User implements UserInterface, Serializable
         $this->causeArea = User::CAUSE_AREA_EXTREME_POVERTY;
         $this->currency = self::DEFAULT_CURRENCY;
         $this->updatedAt = new DateTime();
+        $this->emailVerified = false;
+        $this->emailVerificationToken =  hash('sha256', uniqid());
     }
 
     /**
@@ -264,11 +280,11 @@ class User implements UserInterface, Serializable
      */
     public function unserialize($serialized)
     {
-        list(
+        [
             $this->id,
             $this->email,
             $this->password,
-        ) = unserialize($serialized, array('allowed_classes' => false));
+            ] = unserialize($serialized, array('allowed_classes' => false));
     }
 
     /**
@@ -475,5 +491,37 @@ class User implements UserInterface, Serializable
     public function getTransactions(): Collection
     {
         return $this->transactions;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmailVerified(): bool
+    {
+        return $this->emailVerified;
+    }
+
+    /**
+     * @param bool $emailVerified
+     */
+    public function setEmailVerified(bool $emailVerified): void
+    {
+        $this->emailVerified = $emailVerified;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailVerificationToken(): string
+    {
+        return $this->emailVerificationToken;
+    }
+
+    /**
+     * @param string $emailVerificationToken
+     */
+    public function setEmailVerificationToken(string $emailVerificationToken): void
+    {
+        $this->emailVerificationToken = $emailVerificationToken;
     }
 }
