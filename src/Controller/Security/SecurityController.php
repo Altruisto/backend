@@ -210,6 +210,14 @@ class SecurityController extends AbstractController
             return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
         }
 
+        $resetPasswordToken = new ResetPasswordToken();
+        $resetPasswordToken->setUser($user);
+        $resetPasswordToken->setToken(hash('sha256', uniqid()));
+        $resetPasswordToken->setExpireAt((new DateTime())->modify("+60 minutes"));
+        $resetPasswordToken->setValid(true);
+        $this->entityManager->persist($resetPasswordToken);
+        $this->entityManager->flush();
+
         $this->eventDispatcher->dispatch(ResetPasswordRequestEvent::NAME, new ResetPasswordRequestEvent($user));
 
         return new JsonResponse(null, Response::HTTP_OK);
@@ -233,7 +241,7 @@ class SecurityController extends AbstractController
 
             $resetPasswordToken = $this->entityManager->getRepository(ResetPasswordToken::class)->findOneBy(['token' => $data['token']]);
 
-            if (null === $resetPasswordToken || !$resetPasswordToken->isValid() || $resetPasswordToken->getExpireAt() < new DateTime()) {
+            if (null === $resetPasswordToken || !$resetPasswordToken->isValid() || $resetPasswordToken->getExpireAt() >= new DateTime()) {
                 return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
             }
 

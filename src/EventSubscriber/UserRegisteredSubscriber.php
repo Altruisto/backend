@@ -153,7 +153,7 @@ class UserRegisteredSubscriber implements EventSubscriberInterface
 
 
         $message = (new TemplatedEmail())
-        ->from(new Address(getenv('MAILER_FROM_ADDRESS'), getenv('MAILER_FROM_USERNAME')))
+            ->from(new Address(getenv('MAILER_FROM_ADDRESS'), getenv('MAILER_FROM_USERNAME')))
             ->to(new Address($event->getUser()->getEmail()))
             ->subject('Your are awesome!')
             ->htmlTemplate('emails/ref_more_than_x.html.twig')

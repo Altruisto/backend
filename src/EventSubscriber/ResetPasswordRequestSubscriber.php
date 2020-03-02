@@ -12,6 +12,7 @@
 namespace App\EventSubscriber;
 
 use App\Entity\User\User;
+use App\Entity\Security\ResetPasswordToken;
 use App\Event\Security\ResetPasswordRequestEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -69,16 +70,15 @@ class ResetPasswordRequestSubscriber implements EventSubscriberInterface
         /** @var User $user */
         $user = $event->getUser();
 
-        $user->setEmailVerificationToken(hash('sha256', uniqid()));
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $resetPasswordToken = $this->entityManager->getRepository(ResetPasswordToken::class)->findOneBy(['user' => $user]);
 
         $message = (new TemplatedEmail())
-        ->from(new Address(getenv('MAILER_FROM_ADDRESS'), getenv('MAILER_FROM_USERNAME')))
-            ->to(new Address(getenv('MAILER_USERNAME'), getenv('MAILER_FROM')))
+            ->from(new Address(getenv('MAILER_FROM_ADDRESS'), getenv('MAILER_FROM_USERNAME')))
+            ->to(new Address($user->getUsername()))
             ->subject('Reset your password')
             ->htmlTemplate('emails/reset_password.html.twig')
             ->context([
+                'reset_password_token' => $resetPasswordToken->getToken()
             ]);
 
         $this->mailer->send($message);
