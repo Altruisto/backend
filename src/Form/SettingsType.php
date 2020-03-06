@@ -43,7 +43,7 @@ class SettingsType extends AbstractType
             ->add('currency', CurrencyType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Currency(),
+                    // new Currency(),
                 ],
             ])
             ->add('causeArea', ChoiceType::class, [

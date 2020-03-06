@@ -61,7 +61,7 @@ class TransactionType extends AbstractType
             ->add('commission_currency', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Currency()
+                    // new Currency()
                 ],
             ])
             ->add('sale_amount', NumberType::class, [
@@ -73,7 +73,7 @@ class TransactionType extends AbstractType
             ->add('sale_currency', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Currency()
+                    // new Currency()
                 ],
             ])
             ->add('customer_country_code', TextType::class, [
