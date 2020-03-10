@@ -110,4 +110,27 @@ class PartnerController extends AbstractController
 
         return new JsonResponse($responseData, Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/partners/{domain}", methods={"GET"}, name="get_partner")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function show(string $domain)
+    {
+        $partner = $this->partnerManager->findOneBy(['domain' => $domain]);
+        if (null === $partner) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $responseData = [
+            'name' => $partner->getName(),
+            'logo_url' => $partner->getLogoUrl(),
+            'domain' => $partner->getDomain(),
+            'donation' => $partner->getDonation()
+        ];
+        return new JsonResponse($responseData, Response::HTTP_OK);
+    }
 }
