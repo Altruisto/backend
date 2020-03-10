@@ -27,14 +27,6 @@ use Doctrine\ORM\Mapping\OneToMany;
  */
 class Partner
 {
-    const TYPE_PRIVATE = 'private';
-
-    const TYPE_PUBLIC = 'public';
-
-    const STATUS_SEEN = 'seen';
-
-    const STATUS_UNSEEN = 'unseen';
-
     /**
      * @var int
      *
