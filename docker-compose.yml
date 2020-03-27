@@ -27,7 +27,7 @@ services:
     image: composer
     volumes:
       - .:/app
-    command: install
+    command: install --ignore-platform-reqs
   nginx:
     image: nginx:1.15.3-alpine
     volumes:
