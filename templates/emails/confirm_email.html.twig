@@ -1,6 +1,5 @@
-{% apply inky_to_html|inline_css(source('@styles/foundation-emails.css')) %} {%
-apply inky_to_html|inline_css(source('styles.css')) %} {% include
-'emails/_email_header.html.twig' %}
+{% apply inky_to_html|inline_css(source('@styles/foundation-emails.css')) %}
+{% include 'emails/_email_header.html.twig' %}
 <container>
   <spacer size="16"></spacer>
   <row>
