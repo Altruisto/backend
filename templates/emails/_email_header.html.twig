@@ -1,16 +1,24 @@
 <style type="text/css">
-    .header .wrapper-inner {
-        padding: 20px; /*controls the height of the header*/
-    }
+  .header .wrapper-inner {
+    padding: 20px; /*controls the height of the header*/
+  }
 </style>
 <wrapper class="header">
-    <container>
-        <row class="collapse">
-            <center>
-                <columns valign="middle" class="text-center">
-                    <img src="{{ email.image('@images/email/logo.svg') }}" alt="Logo altruisto">
-                </columns>
-            </center>
-        </row>
-    </container>
+  <container>
+    <row class="collapse">
+      <columns valign="middle" class="text-center">
+        <center>
+          {#
+          <img
+            src="{{ email.image('@images/email/logo.png') }}"
+            alt="Logo altruisto"
+            width="160"
+            height="33"
+            style="min-width: 160px"
+          />
+          #}
+        </center>
+      </columns>
+    </row>
+  </container>
 </wrapper>
