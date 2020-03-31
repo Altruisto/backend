@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "55806783181703ea106a97b19d58bf56",
+    "content-hash": "f563bcf6ba34f00649fc136b14795b39",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -6499,20 +6499,20 @@
         },
         {
             "name": "symfony/templating",
-            "version": "v4.1.12",
+            "version": "v5.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/templating.git",
-                "reference": "c14b05d166f825dfe1f50154536c49971a8d5930"
+                "reference": "b56005834b101ca8253292bbd23917e81883f8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/templating/zipball/c14b05d166f825dfe1f50154536c49971a8d5930",
-                "reference": "c14b05d166f825dfe1f50154536c49971a8d5930",
+                "url": "https://api.github.com/repos/symfony/templating/zipball/b56005834b101ca8253292bbd23917e81883f8cd",
+                "reference": "b56005834b101ca8253292bbd23917e81883f8cd",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1.3",
+                "php": "^7.2.5",
                 "symfony/polyfill-ctype": "~1.8"
             },
             "require-dev": {
@@ -6524,7 +6524,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -6551,7 +6551,7 @@
             ],
             "description": "Symfony Templating Component",
             "homepage": "https://symfony.com",
-            "time": "2019-01-16T18:21:11+00:00"
+            "time": "2020-03-27T16:56:45+00:00"
         },
         {
             "name": "symfony/translation",
