@@ -43,7 +43,7 @@ class Redirector
      *
      * @return string
      */
-    function monetize_link($url, $data, $tracker = '-extreme_poverty-') {
+    function monetize_link($url, $data, $tracker = '-covid-') {
         switch($data['network']){
             case 'cj' :
                 //cj.com

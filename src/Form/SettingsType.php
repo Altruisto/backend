@@ -49,7 +49,8 @@ class SettingsType extends AbstractType
             ->add('causeArea', ChoiceType::class, [
                 'choices' => [
                     User::CAUSE_AREA_EXTREME_POVERTY => User::CAUSE_AREA_EXTREME_POVERTY,
-                    USer::CAUSE_AREA_ANIMAL_SUFFERING => USer::CAUSE_AREA_ANIMAL_SUFFERING
+                    USer::CAUSE_AREA_ANIMAL_SUFFERING => USer::CAUSE_AREA_ANIMAL_SUFFERING,
+                    USer::CAUSE_AREA_COVID => USer::CAUSE_AREA_COVID,
                 ],
                 'constraints' => [
                     new NotBlank(),
