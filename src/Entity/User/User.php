@@ -39,6 +39,8 @@ class User implements UserInterface, Serializable
 
     const CAUSE_AREA_ANIMAL_SUFFERING = 'animals';
 
+    const CAUSE_AREA_COVID = 'covid';
+
     /**
      * @var int
      *
@@ -182,7 +184,7 @@ class User implements UserInterface, Serializable
         $this->isActive = false;
         $this->ref = substr(hash('sha256', uniqid()), 0, 5);
         $this->apiKey = hash('sha256', uniqid());
-        $this->causeArea = User::CAUSE_AREA_EXTREME_POVERTY;
+        $this->causeArea = User::CAUSE_AREA_COVID;
         $this->currency = self::DEFAULT_CURRENCY;
         $this->updatedAt = new DateTime();
         $this->emailVerified = false;
