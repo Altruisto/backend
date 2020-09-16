@@ -116,7 +116,14 @@ class DownloadAwinTransactionsCommand extends Command
                 continue; // Do not save existing transaction
             }
 
-            $sid = explode("-", $awinTransaction['clickRefs']['clickRef']);
+            if (null !== $awinTransaction['clickRefs']) {
+                $sid = explode("-", $awinTransaction['clickRefs']['clickRef']);
+                $tracker = $awinTransaction['clickRefs']['clickRef'];
+            } else {
+                $sid = []; // aby weszlo w kolejnego ifa;
+                $tracker = null;
+            }
+
 
             if (3 !== count($sid)) {
                 $user = null;
@@ -153,7 +160,7 @@ class DownloadAwinTransactionsCommand extends Command
             $transaction->setCustomerCountryCode($awinTransaction['customerCountry']);
             $transaction->setTransactionDate(new DateTime($awinTransaction['transactionDate']));
             $transaction->setUser($user);
-            $transaction->setTracker($awinTransaction['clickRefs']['clickRef']);
+            $transaction->setTracker($tracker);
             $transaction->setReferredBy($referredBy);
             $transaction->setCause($cause);
             $transaction->setResponseContent($awinTransaction);
