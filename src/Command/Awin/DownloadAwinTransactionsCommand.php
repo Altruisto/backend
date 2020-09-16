@@ -83,8 +83,8 @@ class DownloadAwinTransactionsCommand extends Command
     {
         $this
             ->setName('altruisto:download-awin-transactions')
-            ->addArgument('startDate', InputArgument::REQUIRED)
-            ->addArgument('endDate', InputArgument::REQUIRED)
+            ->addArgument('startDate', InputArgument::OPTIONAL)
+            ->addArgument('endDate', InputArgument::OPTIONAL)
             ->addArgument('transactionStatus', InputArgument::OPTIONAL)
         ;
     }
@@ -98,8 +98,9 @@ class DownloadAwinTransactionsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $startDate = new DateTime($input->getArgument('startDate'));
-        $endDate = new DateTime($input->getArgument('endDate'));
+        $startDate = new DateTime($input->getArgument('startDate') ?? 'today - 30 DAYS');
+        $endDate = new DateTime($input->getArgument('endDate') ?? 'today');
+
 
         $transactionStatus = $input->getArgument('transactionStatus');
         if ($transactionStatus) {
