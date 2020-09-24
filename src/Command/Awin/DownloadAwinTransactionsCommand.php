@@ -83,8 +83,8 @@ class DownloadAwinTransactionsCommand extends Command
     {
         $this
             ->setName('altruisto:download-awin-transactions')
-            ->addArgument('startDate', InputArgument::REQUIRED)
-            ->addArgument('endDate', InputArgument::REQUIRED)
+            ->addArgument('startDate', InputArgument::OPTIONAL)
+            ->addArgument('endDate', InputArgument::OPTIONAL)
             ->addArgument('transactionStatus', InputArgument::OPTIONAL)
         ;
     }
@@ -98,8 +98,9 @@ class DownloadAwinTransactionsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $startDate = new DateTime($input->getArgument('startDate'));
-        $endDate = new DateTime($input->getArgument('endDate'));
+        $startDate = new DateTime($input->getArgument('startDate') ?? 'today - 30 DAYS');
+        $endDate = new DateTime($input->getArgument('endDate') ?? 'today');
+
 
         $transactionStatus = $input->getArgument('transactionStatus');
         if ($transactionStatus) {
@@ -115,7 +116,14 @@ class DownloadAwinTransactionsCommand extends Command
                 continue; // Do not save existing transaction
             }
 
-            $sid = explode("-", $awinTransaction['clickRefs']['clickRef']);
+            if (null !== $awinTransaction['clickRefs']) {
+                $sid = explode("-", $awinTransaction['clickRefs']['clickRef']);
+                $tracker = $awinTransaction['clickRefs']['clickRef'];
+            } else {
+                $sid = []; // aby weszlo w kolejnego ifa;
+                $tracker = null;
+            }
+
 
             if (3 !== count($sid)) {
                 $user = null;
@@ -152,7 +160,7 @@ class DownloadAwinTransactionsCommand extends Command
             $transaction->setCustomerCountryCode($awinTransaction['customerCountry']);
             $transaction->setTransactionDate(new DateTime($awinTransaction['transactionDate']));
             $transaction->setUser($user);
-            $transaction->setTracker($awinTransaction['clickRefs']['clickRef']);
+            $transaction->setTracker($tracker);
             $transaction->setReferredBy($referredBy);
             $transaction->setCause($cause);
             $transaction->setResponseContent($awinTransaction);
