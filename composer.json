@@ -26,7 +26,7 @@
         "symfony/intl": "*",
         "symfony/mailer": "*",
         "symfony/monolog-bundle": "^3.3",
-        "symfony/orm-pack": "^1.0",
+        "symfony/orm-pack": "^2.0",
         "symfony/security-bundle": "*",
         "symfony/sendgrid-mailer": "*",
         "symfony/serializer": "*",
