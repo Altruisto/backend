@@ -162,6 +162,7 @@ class UserController extends AbstractController
             'currency' => $user->getCurrency(),
             'created_at' => $user->getCreatedAt()->format('c'),
             'updated_at' => $user->getUpdatedAt()->format('c'),
+            'ref' => $user->getRef(),
             'registration_source' => $user->getRegistrationSource(),
             'referrals_count' => $installationsCount + $usersCount,
         ], JsonResponse::HTTP_OK);
