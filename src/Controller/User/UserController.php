@@ -163,6 +163,7 @@ class UserController extends AbstractController
             'created_at' => $user->getCreatedAt()->format('c'),
             'updated_at' => $user->getUpdatedAt()->format('c'),
             'ref' => $user->getRef(),
+            'referred_by' => $user->getReferredBy(),
             'registration_source' => $user->getRegistrationSource(),
             'referrals_count' => $installationsCount + $usersCount,
         ], JsonResponse::HTTP_OK);
