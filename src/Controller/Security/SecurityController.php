@@ -168,6 +168,10 @@ class SecurityController extends AbstractController
             case 'anima':
                 $user->setCauseArea(User::CAUSE_AREA_ANIMAL_SUFFERING);
                 break;
+
+            case 'poverty':
+                $user->setCauseArea(User::CAUSE_AREA_EXTREME_POVERTY);
+                break;
         }
 
         $this->userManager->save($user);
