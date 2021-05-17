@@ -163,7 +163,6 @@ class SecurityController extends AbstractController
         $user->setPassword($this->userPasswordEncoder->encodePassword($user, $user->getPassword()));
 
         $requestContent = json_decode($request->getContent(), true);
-        // die(var_dump($requestContent));
         switch ($requestContent['referred_by']) {
             case 'animals':
             case 'anima':
