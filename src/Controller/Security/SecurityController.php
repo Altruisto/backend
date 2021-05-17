@@ -112,8 +112,8 @@ class SecurityController extends AbstractController
     public function connectFacebookAction(ClientRegistry $clientRegistry)
     {
         return $clientRegistry->getClient('facebook')->redirect([
-                'public_profile', 'email' // the scopes you want to access
-            ]);
+            'public_profile', 'email' // the scopes you want to access
+        ]);
     }
 
     /**
@@ -134,15 +134,13 @@ class SecurityController extends AbstractController
      * @Route("/connect/facebook/check", name="connect_facebook_check")
      */
     public function connectFacebookCheckAction()
-    {
-    }
+    { }
 
     /**
      * @Route("/connect/google/check", name="connect_google_check")
      */
     public function connectGoogleCheckAction()
-    {
-    }
+    { }
 
     /**
      * @Route("/register", methods={"POST"}, name="register")
@@ -163,6 +161,14 @@ class SecurityController extends AbstractController
 
         $user->setEmail($user->getUsername());
         $user->setPassword($this->userPasswordEncoder->encodePassword($user, $user->getPassword()));
+
+        $requestContent = json_decode($request->getContent(), true);
+        switch ($requestContent['referred_by']) {
+            case 'animals':
+            case 'anima':
+                $user->setCauseArea(User::CAUSE_AREA_ANIMAL_SUFFERING);
+                break;
+        }
 
         $this->userManager->save($user);
 
